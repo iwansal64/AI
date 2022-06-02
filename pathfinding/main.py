@@ -1,6 +1,6 @@
 from copy import deepcopy
 import time
-
+import os
 
 START = 'S'
 END = 'E'
@@ -8,6 +8,7 @@ OBSTACLE = '-'
 TRAVELEDPATH = 'X'
 SEEKEDPATH = 'O'
 PLAYER = 'P'
+speed = 0.5
 
 path1 = [
             ["-", "-", "-", "-", "-", "-", END],
@@ -48,7 +49,36 @@ path4 = [
             ['-', START, " ", " ", "-", " ", " ", " ", " ", " "],
         ]
 
-paths = deepcopy(path4)
+path5 = [
+            [START, "-", "-", "-", "-", "-", " ", " ", " ", " "],
+            ["-", " ", "-", "-", "-", END, " ", " ", "-", " "],
+            ["-", " ", "-", " ", " ", "-", "-", " ", "-", " "],
+            ["-", " ", "-", " ", "-", " ", " ", " ", " ", " "],
+            ["-", " ", "-", "-", " ", " ", " ", " ", " ", " "],
+            ['-', " ", " ", " ", "-", " ", " ", " ", " ", " "],
+            ["-", " ", "-", "-", " ", "-", " ", " ", " ", " "],
+            ["-", " ", "-", " ", "-", " ", " ", " ", " ", " "],
+            ['-', " ", " ", " ", "-", " ", " ", " ", " ", " "],
+        ]
+
+pathChoices = {
+    "path1":deepcopy(path1),
+    "path2":deepcopy(path2),
+    "path3":deepcopy(path3),
+    "path4":deepcopy(path4),
+    "path5":deepcopy(path5)
+}
+
+data = input("What path do u wanna try?")
+if data in pathChoices:
+    print("Okay")
+    paths = pathChoices[data]
+else:
+    print("Not found")
+    exit()
+
+time.sleep(1)
+os.system('cls' if os.name == 'nt' else 'clear')
 
 
 startPathIndex = []
@@ -152,14 +182,21 @@ def pathReverse():
         resultPaths[bestCoordinate[1]][bestCoordinate[0]] = SEEKEDPATH
         print("---------------")
         printTable(resultPaths)
+        print("Coordinate", currentCoordinate, sep=" : ")
+        print("Cost",totalCost, sep=" : ")
         print("---------------")
+
+        time.sleep(speed)
 
         if currentCoordinate == startPathIndex:
             FinishReverse = True
+        else:
+            os.system('cls' if os.name == 'nt' else 'clear')
+
 
     if FinishReverse:
         print("FINISH REVERSED!")
-        print("TIME : "+str(time.time() - timeBefore))
+        # print("TIME : "+str(time.time() - timeBefore))
     else :
         print("Not Finish Reverse :(")
         print("I got stuck...")
@@ -205,18 +242,30 @@ def findPath():
         print("---------------")
         print("Coordinate", currentCoordinate, sep=" : ")
         print("Cost", totalCost, sep=" : ")
+        time.sleep(speed)
+        os.system('cls' if os.name == 'nt' else 'clear')
+
         if currentCoordinate == finishCoordinate:
             Finish = True
+        else:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            
 
     if Finish:
         print("FINISH!")
-        print("TIME : "+str(time.time() - timeBefore))
+        # print("TIME : "+str(time.time() - timeBefore))
     else :
         print("Not Finish :(")
         print("I got stuck... trying finish reversed... in 5 seconds")
-        time.sleep(5)
+        timeLeft = 5
+        while timeLeft > 0:
+            print(f"{timeLeft} left\r")
+            time.sleep(1)
+            timeLeft -= 1
+            
         pathReverse()
 
+time.sleep(speed + 0.5)
 findPath()
 
 
